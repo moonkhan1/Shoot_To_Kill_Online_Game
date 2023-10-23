@@ -82,7 +82,7 @@ GameObject:
   - component: {fileID: 973771760924389938}
   m_Layer: 0
   m_Name: SteamPunkRevolver
-  m_TagString: Untagged
+  m_TagString: IgnoreLayerChange
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -817,7 +817,7 @@ GameObject:
   - component: {fileID: 6455483853881037984}
   m_Layer: 0
   m_Name: Gun
-  m_TagString: IgnoreLayerChange
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -7,8 +7,11 @@ using Zenject;
 
 public class CharacterMovementHandler : NetworkBehaviour
 {
+    [SerializeField] private Animator _anim;
+    private float _walkSpeed = 0f;
+
     bool isRespawnRequested = false;
-    private NetworkCharacterControllerPrototypeCustom _NetworkCharacterControllerPrototypeCustom;
+    private NetworkCharacterControllerPrototypeCustom _networkCharacterControllerPrototypeCustom;
     private Camera localCamera;
     private HPHandler _hpHandler;
 
@@ -19,7 +22,7 @@ public class CharacterMovementHandler : NetworkBehaviour
     private void Awake()
     {
         _networkInGameMessagesManager = GetComponent<NetworkInGameMessagesManager>();
-        _NetworkCharacterControllerPrototypeCustom = GetComponent<NetworkCharacterControllerPrototypeCustom>(); 
+        _networkCharacterControllerPrototypeCustom = GetComponent<NetworkCharacterControllerPrototypeCustom>(); 
         localCamera = GetComponentInChildren<Camera>();
         _hpHandler = GetComponent<HPHandler>();
         _networkPlayer = GetComponent<NetworkPlayer>();
@@ -51,12 +54,26 @@ public class CharacterMovementHandler : NetworkBehaviour
             transform.rotation = rotation;
             
             //Movement
-            Vector3 moveDirection = (networkInputData.MovementInput) * Runner.DeltaTime * _NetworkCharacterControllerPrototypeCustom.maxSpeed;
-            _NetworkCharacterControllerPrototypeCustom.Move(moveDirection);
+            Vector3 moveDirection = (networkInputData.MovementInput) * Runner.DeltaTime * _networkCharacterControllerPrototypeCustom.maxSpeed;
+            _networkCharacterControllerPrototypeCustom.Move(moveDirection);
             
             //Jump
             if(networkInputData.IsJumping)
-                _NetworkCharacterControllerPrototypeCustom.Jump();
+                _networkCharacterControllerPrototypeCustom.Jump();
+
+            //ANIMATIONS
+
+            //Walk Anim
+            Vector2 walkDirection = new Vector2(_networkCharacterControllerPrototypeCustom.Velocity.x, _networkCharacterControllerPrototypeCustom.Velocity.z);
+            walkDirection.Normalize();
+
+            _walkSpeed = Mathf.Lerp(_walkSpeed, Mathf.Clamp01(walkDirection.magnitude), Runner.DeltaTime);
+
+            _anim.SetFloat("Walking", _walkSpeed);
+
+            //Attack Anim
+            if(networkInputData.IsFiring)
+                _anim.SetTrigger("AttackTrig");
 
             CheckFallRespawn();
         }
@@ -80,12 +97,12 @@ public class CharacterMovementHandler : NetworkBehaviour
     }
     private void Respawn()
     {
-        _NetworkCharacterControllerPrototypeCustom.TeleportToPosition(Utils.GetRandomSpawnPoint());
+        _networkCharacterControllerPrototypeCustom.TeleportToPosition(Utils.GetRandomSpawnPoint());
         _hpHandler.OnRespawned();
         isRespawnRequested = false;
     }
     public void SetCharacterControllerEnabled(bool isEnabled)
     {
-        _NetworkCharacterControllerPrototypeCustom.Controller.enabled = isEnabled;
+        _networkCharacterControllerPrototypeCustom.Controller.enabled = isEnabled;
     }
 }

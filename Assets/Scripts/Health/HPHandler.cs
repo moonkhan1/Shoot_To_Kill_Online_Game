@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Fusion;
@@ -20,20 +21,17 @@ public class HPHandler : NetworkBehaviour
     [SerializeField] private Color _uiOnHitColor;
     [SerializeField] private Image _uiOnHitImage;
 
-    [Header("On Hit Body Effects ")] 
-    [SerializeField] private MeshRenderer _bodyMeshRenderer;
-    [SerializeField] private Color _bodyOnHitColor;
-    private Color _defaultBodyColor;
+    [Header("On Hit Body Effects ")]
+    private List<FlashMeshRenderer> _flashMeshRenderers = new();
     public System.Action OnDead;
 
-    [SerializeField] private GameObject _playerPrefab; 
+    [SerializeField] private GameObject _playerModel; 
     [SerializeField] private GameObject _deathEffectPrefab;
 
     private HitboxRoot _hitboxRoot;
     private NetworkPlayer _networkPlayer;
     private CharacterMovementHandler _characterMovementHandler;
     private NetworkInGameMessagesManager _networkInGameMessagesManager;
-    // [Inject] private PlayerSpawner _playerSpawner;
 
     private void Awake()
     {
@@ -51,19 +49,38 @@ public class HPHandler : NetworkBehaviour
             IsDead = false;
         }
 
-        _defaultBodyColor = _bodyMeshRenderer.material.color;
+        MeshRenderer[] meshRenderers = _playerModel.GetComponentsInChildren<MeshRenderer>();
+
+        foreach (MeshRenderer meshRenderer in meshRenderers)
+        {
+            _flashMeshRenderers.Add(new FlashMeshRenderer(meshRenderer, null));
+        }
+
+        SkinnedMeshRenderer[] skinnedMeshRenderers = _playerModel.GetComponentsInChildren<SkinnedMeshRenderer>();
+
+        foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
+        {
+            _flashMeshRenderers.Add(new FlashMeshRenderer(null, skinnedMeshRenderer));
+        }
+        //_defaultBodyColor = _bodyMeshRenderer.material.color;
         IsInitialized = true;
     }
 
     private async void OnHitAsync()
     {
-        _bodyMeshRenderer.material.color = _bodyOnHitColor;
+        foreach (FlashMeshRenderer flashMeshRenderer in _flashMeshRenderers)
+        {
+            flashMeshRenderer.ChangeColor(Color.red);
+        }
         if (Object.HasInputAuthority)
             _uiOnHitImage.color = _uiOnHitColor;
 
         await UniTask.WaitForSeconds(0.2f);
-        _bodyMeshRenderer.material.color = _defaultBodyColor;
-        
+        foreach (FlashMeshRenderer flashMeshRenderer in _flashMeshRenderers)
+        {
+            flashMeshRenderer.RestoreColor();
+        }
+
         if (Object.HasInputAuthority && !IsDead)
             _uiOnHitImage.color = new Color(0,0,0,0);
     }
@@ -134,7 +151,7 @@ public class HPHandler : NetworkBehaviour
 
     private void OnPlayerDead()
     {
-        _playerPrefab.gameObject.SetActive(false);
+        _playerModel.gameObject.SetActive(false);
         _hitboxRoot.HitboxRootActive = false;
         _characterMovementHandler.SetCharacterControllerEnabled(false);  
 
@@ -145,7 +162,7 @@ public class HPHandler : NetworkBehaviour
         if(Object.HasInputAuthority) 
             _uiOnHitImage.color = new Color(0,0,0,0);
         
-        _playerPrefab.gameObject.SetActive(true);
+        _playerModel.gameObject.SetActive(true);
         _hitboxRoot.HitboxRootActive = true;
         _characterMovementHandler.SetCharacterControllerEnabled(true);        
     }

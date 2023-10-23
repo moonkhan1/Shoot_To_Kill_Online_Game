@@ -47,10 +47,11 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             if(Camera.main != null)
                 Camera.main.gameObject.SetActive(false);
 
-            AudioListener playerAudioListener = GetComponentInChildren<AudioListener>(true); //Enable disabled listeners
-            playerAudioListener.enabled = true;
+            //AudioListener playerAudioListener = GetComponentInChildren<AudioListener>(true); //Enable disabled listeners
+            //playerAudioListener.enabled = true;
             
             localCameraHandler.localCamera.enabled = true;
+            localCameraHandler.gameObject.SetActive(true);
 
             //Detach camera for player
             localCameraHandler.transform.parent = null;
@@ -64,12 +65,14 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         {
             //Disable player camera if left
             localCameraHandler.localCamera.enabled = false;
-            
+            localCameraHandler.gameObject.SetActive(false);
+
+
             _localUI.SetActive(false);
             
             //Only 1 audioListener allowed. Disable the players'
-            AudioListener playerAudioListener = GetComponentInChildren<AudioListener>();
-            playerAudioListener.enabled = false;
+            //AudioListener playerAudioListener = GetComponentInChildren<AudioListener>();
+            //playerAudioListener.enabled = false;
             
             //Disable UI for remote player
             _localUI.SetActive(false);
