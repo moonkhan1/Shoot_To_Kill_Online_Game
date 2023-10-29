@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Fusion;
 using Fusion.Sockets;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -62,8 +63,22 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
             }
             else
             {
-                NetworkPlayer spawnedNetworkPlayer = runner.Spawn(playerPrefab, Utils.GetRandomSpawnPoint(), Quaternion.identity, player);
-                
+                bool isInReadyScene = SceneManager.GetActiveScene().name == "ReadyScene";
+
+                Vector3 spawnedPosition = Utils.GetRandomSpawnPoint();
+
+                if (isInReadyScene)
+                {
+                    //We are lining players by their PlayerId in ReadyScene. However Id of the Host is larger than others.
+                    if (runner.SessionInfo.MaxPlayers - player.PlayerId == 1)
+                        spawnedPosition = new Vector3(-1 * 3, 1, 0);
+                    else
+                        spawnedPosition = new Vector3(player.PlayerId * 1.5f, 1, 0);
+                }
+
+                NetworkPlayer spawnedNetworkPlayer = runner.Spawn(playerPrefab, spawnedPosition, Quaternion.identity, player);
+                spawnedNetworkPlayer.transform.position = spawnedPosition;
+                spawnedNetworkPlayer.transform.rotation = Quaternion.LookRotation(Camera.main.transform.position);
                 //Store token for player
                 spawnedNetworkPlayer.Token = playerToken;
                 

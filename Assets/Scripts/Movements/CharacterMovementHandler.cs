@@ -3,11 +3,12 @@ using System.Threading.Tasks;
 using Cinemachine;
 using Fusion;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Zenject;
 
 public class CharacterMovementHandler : NetworkBehaviour
 {
-    [SerializeField] private Animator _anim;
+    [SerializeField] public Animator Anim { get; set; }
     private float _walkSpeed = 0f;
 
     bool isRespawnRequested = false;
@@ -46,6 +47,8 @@ public class CharacterMovementHandler : NetworkBehaviour
         //Get inputs from network
         if (GetInput(out NetworkInputData networkInputData))
         {
+            if (SceneManager.GetActiveScene().name == "ReadyScene") return;
+
             // Rotate the transform as the client aim vector
             transform.forward = networkInputData.AimForwardVector;
             //Cancel out the x axis rotation to prevent tilting
@@ -62,6 +65,7 @@ public class CharacterMovementHandler : NetworkBehaviour
                 _networkCharacterControllerPrototypeCustom.Jump();
 
             //ANIMATIONS
+            if (Anim == null) return;
 
             //Walk Anim
             Vector2 walkDirection = new Vector2(_networkCharacterControllerPrototypeCustom.Velocity.x, _networkCharacterControllerPrototypeCustom.Velocity.z);
@@ -69,11 +73,11 @@ public class CharacterMovementHandler : NetworkBehaviour
 
             _walkSpeed = Mathf.Lerp(_walkSpeed, Mathf.Clamp01(walkDirection.magnitude), Runner.DeltaTime);
 
-            _anim.SetFloat("Walking", _walkSpeed);
+            Anim.SetFloat("Walking", _walkSpeed);
 
             //Attack Anim
             if(networkInputData.IsFiring)
-                _anim.SetTrigger("AttackTrig");
+                Anim.SetTrigger("AttackTrig");
 
             CheckFallRespawn();
         }

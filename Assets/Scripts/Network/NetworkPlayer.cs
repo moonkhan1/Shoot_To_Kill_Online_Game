@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Fusion;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using Zenject;
 
@@ -36,27 +37,43 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     public override void Spawned()
     {
+        bool isInReadyScene = SceneManager.GetActiveScene().name == "ReadyScene";
+
         if (Object.HasInputAuthority)
         {
             Local = this;
-            
-            //Set layer of local Player's model children
-            Utils.SetRenderLayerInChildren(model, LayerMask.NameToLayer("LocalPlayerModel"));
-            
-            //Disable main Camera on player spawned
-            if(Camera.main != null)
-                Camera.main.gameObject.SetActive(false);
 
-            //AudioListener playerAudioListener = GetComponentInChildren<AudioListener>(true); //Enable disabled listeners
-            //playerAudioListener.enabled = true;
-            
-            localCameraHandler.localCamera.enabled = true;
-            localCameraHandler.gameObject.SetActive(true);
+            if (isInReadyScene)
+            {
+                Camera.main.transform.position = new Vector3(transform.position.x, Camera.main.transform.position.y, Camera.main.transform.position.z);
 
-            //Detach camera for player
-            localCameraHandler.transform.parent = null;
-            
-            _localUI.SetActive(true);
+                localCameraHandler.gameObject.SetActive(false);
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+            else
+            {
+                //Set layer of local Player's model children
+                Utils.SetRenderLayerInChildren(model, LayerMask.NameToLayer("LocalPlayerModel"));
+
+                //Disable main Camera on player spawned
+                if (Camera.main != null)
+                    Camera.main.gameObject.SetActive(false);
+
+                //AudioListener playerAudioListener = GetComponentInChildren<AudioListener>(true); //Enable disabled listeners
+                //playerAudioListener.enabled = true;
+
+                localCameraHandler.localCamera.enabled = true;
+                localCameraHandler.gameObject.SetActive(true);
+
+                //Detach camera for player
+                localCameraHandler.transform.parent = null;
+
+                _localUI.SetActive(true);
+
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
             
             RPC_SetName(PlayerPrefs.GetString("PlayerName"));
             Debug.Log("Spawned local player");
@@ -137,5 +154,25 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         //Destroy local camera if local player destroyed because new one will be spawned with own local camera 
         if(localCameraHandler != null)
             Destroy(localCameraHandler.gameObject);
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if(scene.name != "ReadyScene")
+        {
+            if(Object.HasStateAuthority && Object.HasInputAuthority)
+            {
+                Spawned();
+            }
+            if(Object.HasStateAuthority)
+            {
+                GetComponent<CharacterMovementHandler>().RequestRespawn();
+            }
+        }
     }
 }

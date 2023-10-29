@@ -49,6 +49,16 @@ public class HPHandler : NetworkBehaviour
             IsDead = false;
         }
 
+
+        ResetMeshRenderers();
+        //_defaultBodyColor = _bodyMeshRenderer.material.color;
+        IsInitialized = true;
+    }
+
+    public void ResetMeshRenderers()
+    {
+        _flashMeshRenderers.Clear();
+
         MeshRenderer[] meshRenderers = _playerModel.GetComponentsInChildren<MeshRenderer>();
 
         foreach (MeshRenderer meshRenderer in meshRenderers)
@@ -62,10 +72,7 @@ public class HPHandler : NetworkBehaviour
         {
             _flashMeshRenderers.Add(new FlashMeshRenderer(null, skinnedMeshRenderer));
         }
-        //_defaultBodyColor = _bodyMeshRenderer.material.color;
-        IsInitialized = true;
     }
-
     private async void OnHitAsync()
     {
         foreach (FlashMeshRenderer flashMeshRenderer in _flashMeshRenderers)
