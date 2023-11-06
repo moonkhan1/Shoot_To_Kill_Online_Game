@@ -31,6 +31,8 @@ public class CharacterMovementHandler : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
+        if (SceneManager.GetActiveScene().name == "ReadyScene") return;
+
         if (Object.HasStateAuthority)
         {
             if (isRespawnRequested)
@@ -47,7 +49,6 @@ public class CharacterMovementHandler : NetworkBehaviour
         //Get inputs from network
         if (GetInput(out NetworkInputData networkInputData))
         {
-            if (SceneManager.GetActiveScene().name == "ReadyScene") return;
 
             // Rotate the transform as the client aim vector
             transform.forward = networkInputData.AimForwardVector;

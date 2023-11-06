@@ -7,6 +7,7 @@ public struct NetworkInputData : INetworkInput
 {
     public Vector3 MovementInput { get; set; }
     public Vector3 AimForwardVector { get; set; }
+    public Vector3 LocalCameraPosition{ get; set; }
     public NetworkBool IsJumping { get; set; }
     public NetworkBool IsFiring { get; set; }
     public NetworkBool IsThrown { get; set; }

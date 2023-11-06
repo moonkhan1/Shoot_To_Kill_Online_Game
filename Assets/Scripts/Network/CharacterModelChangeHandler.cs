@@ -40,7 +40,7 @@ public class CharacterModelChangeHandler : NetworkBehaviour
         newNetworkPlayerModel.playerModelID = (byte)Random.Range(0, _playerModelTypes.Count);
 
         //If has input authority request host to integrate new model among server
-        if(Object.HasInputAuthority) RPC_RequestModelChange(newNetworkPlayerModel);
+        if (Object.HasInputAuthority) RPC_RequestModelChange(newNetworkPlayerModel);
     }
     private GameObject ReplacePlayerModel(GameObject currentModel, GameObject newPlayerType)
     {
@@ -51,22 +51,22 @@ public class CharacterModelChangeHandler : NetworkBehaviour
         GetComponent<CharacterMovementHandler>().Anim = newModel.GetComponent<Animator>();
 
         Destroy(currentModel);
-        
+
         return newModel;
     }
 
     internal void ReplaceModel()
     {
         _playerModel = ReplacePlayerModel(_playerModel, _playerModelTypes[networkPlayerModel.playerModelID]);
-        
+
         GetComponent<HPHandler>().ResetMeshRenderers();
-    
+
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     private void RPC_RequestModelChange(NetworkPlayerModel newNetworkPlayerModel, RpcInfo info = default)
     {
-        networkPlayerModel = newNetworkPlayerModel; 
+        networkPlayerModel = newNetworkPlayerModel;
     }
 
     internal static void OnPlayerModelChanged(Changed<CharacterModelChangeHandler> changed)
@@ -85,7 +85,7 @@ public class CharacterModelChangeHandler : NetworkBehaviour
 
         newModel.playerModelID++;
 
-        if(newModel.playerModelID > _playerModelTypes.Count - 1)
+        if (newModel.playerModelID > _playerModelTypes.Count - 1)
         {
             newModel.playerModelID = 0;
         }
@@ -94,7 +94,7 @@ public class CharacterModelChangeHandler : NetworkBehaviour
 
     public void OnReady(bool isReady)
     {
-        if(Object.HasInputAuthority)
+        if (Object.HasInputAuthority)
         {
             Rpc_SetReady(isReady);
         }
@@ -113,7 +113,7 @@ public class CharacterModelChangeHandler : NetworkBehaviour
 
     private void IsChareacterModelSelectionDone()
     {
-        if(isDoneWithModelSelection)
+        if (isDoneWithModelSelection)
         {
             _isReadyImage.gameObject.SetActive(true);
         }
@@ -121,5 +121,21 @@ public class CharacterModelChangeHandler : NetworkBehaviour
         {
             _isReadyImage.gameObject.SetActive(false);
         }
+    }
+
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if(scene.name != "ReadyScene")
+            _isReadyImage.gameObject.SetActive(false);
     }
 }

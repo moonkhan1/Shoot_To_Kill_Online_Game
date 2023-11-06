@@ -23,7 +23,13 @@ public class ReadyUIHandler : NetworkBehaviour
 
     private void Update()
     {
-        if(countDownTickTimer.Expired(Runner))
+        if (NetworkPlayer.Local == null)
+        {
+            return;
+        }
+
+
+        if (countDownTickTimer.Expired(Runner))
         {
             StartGame();
             countDownTickTimer = TickTimer.None;
@@ -102,7 +108,6 @@ public class ReadyUIHandler : NetworkBehaviour
     }
     private void OnCountdownChanged()
     {
-        Debug.Log("On COUNTDOWN");
         if (countDown == 0)
         {
             _countText.text = $"";

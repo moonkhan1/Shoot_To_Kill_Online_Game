@@ -11,6 +11,7 @@ using Zenject;
 public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 {
     [SerializeField] private TextMeshProUGUI _playerName;
+    [SerializeField] public Transform model;
     
     [Networked(OnChanged = nameof(OnNameChanged))]
     public NetworkString<_16> networkedPlayerName { get; private set; }
@@ -18,13 +19,15 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     // Remote Client Token Hash
     [Networked] public int Token { get; set; }
     public static NetworkPlayer Local { get; private set; }
-    [SerializeField] private Transform model;
     private NetworkCharacterControllerPrototypeCustom _networkCharacterControllerPrototypeCustom;
     private bool _isPlayerJoinedGame = false;
     private NetworkInGameMessagesManager _networkInGameMessagesManager;
     
     public LocalCameraHandler localCameraHandler;
     [SerializeField] private GameObject _localUI;
+
+    // CAMERA
+    public bool IsThirdPersonCamera { get; set; }
     private void OnValidate()
     {
         GetReference();
@@ -48,6 +51,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
                 Camera.main.transform.position = new Vector3(transform.position.x, Camera.main.transform.position.y, Camera.main.transform.position.z);
 
                 localCameraHandler.gameObject.SetActive(false);
+                _localUI.SetActive(false);
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
             }
@@ -76,6 +80,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             }
             
             RPC_SetName(PlayerPrefs.GetString("PlayerName"));
+            _playerName.gameObject.SetActive(false);
             Debug.Log("Spawned local player");
         }
         else
@@ -149,11 +154,20 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         }
     }
 
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void Rpc_CameraChange(bool isThirdPersonCamera, RpcInfo info = default)
+    {
+        Debug.Log("Rpc_CameraChange");
+        IsThirdPersonCamera = isThirdPersonCamera;
+    }
+
     private void OnDestroy()
     {
         //Destroy local camera if local player destroyed because new one will be spawned with own local camera 
-        if(localCameraHandler != null)
+        if (localCameraHandler != null)
             Destroy(localCameraHandler.gameObject);
+
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     private void OnEnable()

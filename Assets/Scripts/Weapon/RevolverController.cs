@@ -9,6 +9,7 @@ public class RevolverController : MonoBehaviour
     private Animator _anim;
     private PlayerInputCustom _playerInputCustom;
 
+
     private void Awake()
     {
         _playerInputCustom = new PlayerInputCustom();
@@ -37,6 +38,8 @@ public class RevolverController : MonoBehaviour
         {
             _anim.Play("Shoot");
             _anim.Play("Shoot2");
+
+            
         }
     }
 }

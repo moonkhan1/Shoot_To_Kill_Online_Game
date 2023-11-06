@@ -139,7 +139,7 @@ GameObject:
   - component: {fileID: 3429592766397455720}
   - component: {fileID: 5859304276658773296}
   - component: {fileID: 8411283341138892672}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: IsReadyImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1942,12 +1942,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   _playerName: {fileID: 6874902357359762293}
+  model: {fileID: 5676269786062985668}
   _networkedPlayerName:
     _length: 0
     _data:
       Data: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   _Token: 0
-  model: {fileID: 5676269786062985668}
   localCameraHandler: {fileID: 8198028574966191884}
   _localUI: {fileID: 785667398698320818}
 --- !u!114 &8095493384606945442
@@ -2077,9 +2077,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  _fireParticleEffect:
+  _fireParticleEffects:
   - {fileID: 236646031884468780}
   - {fileID: 4142567404797306897}
+  _remoteFireParticleEffects:
+  - {fileID: 985248372231946235}
+  - {fileID: 4006419678474687942}
   _aimPoint: {fileID: 1108359968804933821}
   collisionLayer:
     serializedVersion: 2
@@ -2182,6 +2185,8 @@ MonoBehaviour:
   _interpolationDataSource: 0
   _playerModel: {fileID: 3504206693227846520}
   _isReadyImage: {fileID: 8411283341138892672}
+  _isDoneWithModelSelection:
+    _value: 0
 --- !u!1 &3900183474108676277
 GameObject:
   m_ObjectHideFlags: 0
@@ -2504,6 +2509,7 @@ GameObject:
   - component: {fileID: 1542436529721413178}
   - component: {fileID: 5033288081462808573}
   - component: {fileID: 8198028574966191884}
+  - component: {fileID: 2320876456511821736}
   m_Layer: 0
   m_Name: LocalCamera
   m_TagString: Untagged
@@ -2519,7 +2525,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4205086161671507856}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.016, y: 0.345, z: 0.233}
+  m_LocalPosition: {x: 0.44863972, y: 1.7135639, z: -2.2098217}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2626,6 +2632,42 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   localCamera: {fileID: 5409251810963912929}
   _cameraFollowPoint: {fileID: 1108359968804933821}
+  _localGun: {fileID: 110682472081607455}
+  _nameAndIconCanvas: {fileID: 8488361450350305217}
+--- !u!114 &2320876456511821736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4205086161671507856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShowDebugText: 0
+  m_ShowCameraFrustum: 1
+  m_IgnoreTimeScale: 0
+  m_WorldUpOverride: {fileID: 0}
+  m_UpdateMethod: 2
+  m_BlendUpdateMethod: 1
+  m_DefaultBlend:
+    m_Style: 1
+    m_Time: 2
+    m_CustomCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  m_CustomBlends: {fileID: 0}
+  m_CameraCutEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_CameraActivatedEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &4210304086128434306
 GameObject:
   m_ObjectHideFlags: 0
@@ -4066,7 +4108,7 @@ GameObject:
   - component: {fileID: 8721428549611796467}
   - component: {fileID: 8723511602746535665}
   - component: {fileID: 6874902357359762293}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: NameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5255,7 +5297,7 @@ GameObject:
   - component: {fileID: 321441397452831655}
   - component: {fileID: 8829328073307727583}
   - component: {fileID: 9030760935123444727}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6450,6 +6492,21 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Untagged
       objectReference: {fileID: 0}
+    - target: {fileID: 8166648849852553809, guid: cfc77d83b86594c4f92484b5001a01bc,
+        type: 3}
+      propertyPath: _remoteFireParticleEffects.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8166648849852553809, guid: cfc77d83b86594c4f92484b5001a01bc,
+        type: 3}
+      propertyPath: _remoteFireParticleEffects.Array.data[0]
+      value: 
+      objectReference: {fileID: 985248372231946235}
+    - target: {fileID: 8166648849852553809, guid: cfc77d83b86594c4f92484b5001a01bc,
+        type: 3}
+      propertyPath: _remoteFireParticleEffects.Array.data[1]
+      value: 
+      objectReference: {fileID: 4006419678474687942}
     - target: {fileID: 8655058295471963356, guid: cfc77d83b86594c4f92484b5001a01bc,
         type: 3}
       propertyPath: playOnAwake
@@ -6592,9 +6649,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cfc77d83b86594c4f92484b5001a01bc, type: 3}
+--- !u!198 &985248372231946235 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 8655058295471963356, guid: cfc77d83b86594c4f92484b5001a01bc,
+    type: 3}
+  m_PrefabInstance: {fileID: 8480488677926880039}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1111768418460710607 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8853361055667385832, guid: cfc77d83b86594c4f92484b5001a01bc,
+    type: 3}
+  m_PrefabInstance: {fileID: 8480488677926880039}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &4006419678474687942 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 4767366956918740705, guid: cfc77d83b86594c4f92484b5001a01bc,
     type: 3}
   m_PrefabInstance: {fileID: 8480488677926880039}
   m_PrefabAsset: {fileID: 0}
@@ -6880,6 +6949,12 @@ PrefabInstance:
 --- !u!4 &110682472081607448 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8853361055667385832, guid: cfc77d83b86594c4f92484b5001a01bc,
+    type: 3}
+  m_PrefabInstance: {fileID: 8886813615485468400}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &110682472081607455 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8853361055667385839, guid: cfc77d83b86594c4f92484b5001a01bc,
     type: 3}
   m_PrefabInstance: {fileID: 8886813615485468400}
   m_PrefabAsset: {fileID: 0}

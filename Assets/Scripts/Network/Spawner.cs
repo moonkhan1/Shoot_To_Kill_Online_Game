@@ -71,9 +71,9 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
                 {
                     //We are lining players by their PlayerId in ReadyScene. However Id of the Host is larger than others.
                     if (runner.SessionInfo.MaxPlayers - player.PlayerId == 1)
-                        spawnedPosition = new Vector3(-1 * 3, 1, 0);
+                        spawnedPosition = new Vector3(-1 * 3, 1, -3);
                     else
-                        spawnedPosition = new Vector3(player.PlayerId * 1.5f, 1, 0);
+                        spawnedPosition = new Vector3(player.PlayerId * 1.5f, 1, -3);
                 }
 
                 NetworkPlayer spawnedNetworkPlayer = runner.Spawn(playerPrefab, spawnedPosition, Quaternion.identity, player);

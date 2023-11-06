@@ -13,6 +13,9 @@ public class CharacterInputHandler : MonoBehaviour
     public bool IsJumping;
     public bool IsFiring;
     public bool IsThrown;
+    public bool IsCamera;
+
+    private int cameraIndex;
     private PlayerInputCustom _playerInputCustom;
     private LocalCameraHandler _localCameraHandler;
     private void Awake()
@@ -47,6 +50,10 @@ public class CharacterInputHandler : MonoBehaviour
         _playerInputCustom.Player.Throw.started += OnThrow;
         _playerInputCustom.Player.Throw.performed += OnThrow;
         _playerInputCustom.Player.Throw.canceled += OnThrow;
+
+        _playerInputCustom.Player.Camera.started += OnCamera;
+        _playerInputCustom.Player.Camera.performed += OnCamera;
+        _playerInputCustom.Player.Camera.canceled += OnCamera;
     }
     
     private void OnDisable()
@@ -70,10 +77,18 @@ public class CharacterInputHandler : MonoBehaviour
         _playerInputCustom.Player.Throw.started -= OnThrow;
         _playerInputCustom.Player.Throw.performed -= OnThrow;
         _playerInputCustom.Player.Throw.canceled -= OnThrow;
-    
+
+        _playerInputCustom.Player.Camera.started -= OnCamera;
+        _playerInputCustom.Player.Camera.performed -= OnCamera;
+        _playerInputCustom.Player.Camera.canceled -= OnCamera;
+
         _playerInputCustom.Disable();
     }
-    
+    private void Update()
+    {
+        //NetworkPlayer.Local.IsThirdPersonCamera = IsCamera;
+        //NetworkPlayer.Local.Rpc_CameraChange(NetworkPlayer.Local.IsThirdPersonCamera);
+    }
     public void OnMove(InputAction.CallbackContext context)
     {
         Vector2 oldDirection = context.ReadValue<Vector2>();
@@ -100,13 +115,31 @@ public class CharacterInputHandler : MonoBehaviour
     {
         IsThrown = context.action.WasPressedThisFrame();
     }
+    public void OnCamera(InputAction.CallbackContext context)
+    {
+        //NetworkPlayer.Local.IsThirdPersonCamera = !NetworkPlayer.Local.IsThirdPersonCamera;
+        //NetworkPlayer.Local.Rpc_CameraChange(NetworkPlayer.Local.IsThirdPersonCamera);
 
+        if (IsCamera && context.action.triggered) return;
+        NetworkPlayer.Local.IsThirdPersonCamera = IsCamera;
+        NetworkPlayer.Local.Rpc_CameraChange(IsCamera);
+        StartCoroutine(WaitSecondsForCamera());
+    }
+    IEnumerator WaitSecondsForCamera()
+    {
+        IsCamera = true && cameraIndex % 2 == 0;
+        yield return new WaitForSeconds(0.15f);
+        IsCamera = false;
+        cameraIndex++;
+    }
     public NetworkInputData GetNetworkData()
     {
         NetworkInputData networkInputData = new NetworkInputData();
 
         networkInputData.MovementInput = Direction;
         networkInputData.AimForwardVector = _localCameraHandler.transform.forward;
+        //To inform Host about our local camera position.With this way, host knows where to perform shot
+        networkInputData.LocalCameraPosition = _localCameraHandler.transform.position;
         networkInputData.IsFiring = IsFiring;
         networkInputData.IsJumping = IsJumping;
         networkInputData.IsThrown = IsThrown;
