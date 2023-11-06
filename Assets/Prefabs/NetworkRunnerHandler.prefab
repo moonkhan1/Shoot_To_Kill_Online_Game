@@ -46,3 +46,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   networkRunnerPrefab: {fileID: 4062129067289100231, guid: a723b49279b9cf5438a9c5c6d893b5c3,
     type: 3}
+  spawnPoints:
+  - {fileID: 1004361963189889548, guid: 48cdbc0b9a9c6e84b80070eee340aea1, type: 3}
+  - {fileID: 6103129701382414573, guid: 4beccf381819fbb42a14c1024a8cd78a, type: 3}
+  - {fileID: 7883059960929083089, guid: e87f0f691a4046449a8369faf8fd42fe, type: 3}
+  - {fileID: 1740346090748590768, guid: c151680d008660242a9ad00b89706f98, type: 3}
+  - {fileID: 3364414994267523144, guid: dc9bb57edb4b4524cad8759ddf29bd19, type: 3}
+  - {fileID: 3340262329378524358, guid: 6849264cc3a121b428e4bdf6fc09a1f0, type: 3}
+  - {fileID: 606913842267658752, guid: 6466172d8e1744243aff217431faf605, type: 3}

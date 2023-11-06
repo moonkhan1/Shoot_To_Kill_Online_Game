@@ -18,8 +18,9 @@ public class MainMenuUIHandler : MonoBehaviour
     [SerializeField] private Button _findGameButton;
     [SerializeField] private Button _createGameButton;
     [SerializeField] private Button _startGameButton;
+    [SerializeField] private Button _backToListButton;
 
-    
+
     private void Awake()
     {
         _findGameButton.onClick.AddListener(() =>
@@ -37,6 +38,7 @@ public class MainMenuUIHandler : MonoBehaviour
             }
         });
         _createGameButton.onClick.AddListener(OnCreateNewGame);
+        _backToListButton.onClick.AddListener(BackToListButton);
     }
 
     private void HideAllPanels()
@@ -79,6 +81,12 @@ public class MainMenuUIHandler : MonoBehaviour
         HideAllPanels();
         
         _createSessionPanel.SetActive(true);
+    }
+
+    private void BackToListButton()
+    {
+        HideAllPanels();
+        _sessionBrowsePanel.SetActive(true);
     }
 
     private void OnStartNewSession()

@@ -65,7 +65,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
             {
                 bool isInReadyScene = SceneManager.GetActiveScene().name == "ReadyScene";
 
-                Vector3 spawnedPosition = Utils.GetRandomSpawnPoint();
+                Vector3 spawnedPosition = Utils.GetRandomSpawnPoint(NetworkRunnerHandler.Instance.spawnPoints);
 
                 if (isInReadyScene)
                 {

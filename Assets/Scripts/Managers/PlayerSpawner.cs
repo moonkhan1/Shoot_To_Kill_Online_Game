@@ -36,7 +36,7 @@ public class PlayerSpawner : BasePlayerSpawner
             GrowPool();
         }
         var playerPoolObject = _pool1.Dequeue();
-        playerPoolObject.transform.GetComponent<NetworkCharacterControllerPrototypeCustom>().TeleportToPosition(Utils.GetRandomSpawnPoint());
+        //playerPoolObject.transform.GetComponent<NetworkCharacterControllerPrototypeCustom>().TeleportToPosition(Utils.GetRandomSpawnPoint());
         playerPoolObject.gameObject.SetActive(true);
         Debug.Log("Player Spawned");
     }

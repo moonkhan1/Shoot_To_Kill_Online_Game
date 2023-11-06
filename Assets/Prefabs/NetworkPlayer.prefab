@@ -139,7 +139,7 @@ GameObject:
   - component: {fileID: 3429592766397455720}
   - component: {fileID: 5859304276658773296}
   - component: {fileID: 8411283341138892672}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: IsReadyImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2064,6 +2064,7 @@ MonoBehaviour:
   IsJumping: 0
   IsFiring: 0
   IsThrown: 0
+  IsCamera: 0
 --- !u!114 &7666466770707809566
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2633,7 +2634,7 @@ MonoBehaviour:
   localCamera: {fileID: 5409251810963912929}
   _cameraFollowPoint: {fileID: 1108359968804933821}
   _localGun: {fileID: 110682472081607455}
-  _nameAndIconCanvas: {fileID: 8488361450350305217}
+  _localCanvas: {fileID: 45507075066235630}
 --- !u!114 &2320876456511821736
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4108,7 +4109,7 @@ GameObject:
   - component: {fileID: 8721428549611796467}
   - component: {fileID: 8723511602746535665}
   - component: {fileID: 6874902357359762293}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: NameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5297,7 +5298,7 @@ GameObject:
   - component: {fileID: 321441397452831655}
   - component: {fileID: 8829328073307727583}
   - component: {fileID: 9030760935123444727}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -102,7 +102,7 @@ public class CharacterMovementHandler : NetworkBehaviour
     }
     private void Respawn()
     {
-        _networkCharacterControllerPrototypeCustom.TeleportToPosition(Utils.GetRandomSpawnPoint());
+        _networkCharacterControllerPrototypeCustom.TeleportToPosition(Utils.GetRandomSpawnPoint(NetworkRunnerHandler.Instance.spawnPoints));
         _hpHandler.OnRespawned();
         isRespawnRequested = false;
     }

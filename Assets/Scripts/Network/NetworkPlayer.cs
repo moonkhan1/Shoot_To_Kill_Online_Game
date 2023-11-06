@@ -80,7 +80,9 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             }
             
             RPC_SetName(PlayerPrefs.GetString("PlayerName"));
-            _playerName.gameObject.SetActive(false);
+            //_playerName.gameObject.SetActive(false);
+            Utils.SetRenderLayerInChildren(_playerName.gameObject.transform, LayerMask.NameToLayer("Default"));
+
             Debug.Log("Spawned local player");
         }
         else

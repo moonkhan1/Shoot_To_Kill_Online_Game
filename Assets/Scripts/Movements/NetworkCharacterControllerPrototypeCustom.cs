@@ -131,7 +131,10 @@ public class NetworkCharacterControllerPrototypeCustom : NetworkTransform {
     if (IsGrounded && moveVelocity.y < 0) {
       moveVelocity.y = 0f;
     }
-
+    if (moveVelocity.y > 10f)
+    {
+        moveVelocity.y = 0f;
+    }
     moveVelocity.y += gravity * Runner.DeltaTime;
 
     var horizontalVel = default(Vector3);

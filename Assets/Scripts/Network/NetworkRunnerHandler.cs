@@ -16,6 +16,7 @@ public class NetworkRunnerHandler : SingletonBase<NetworkRunnerHandler>
 {
     public NetworkRunner networkRunnerPrefab;
     private NetworkRunner networkRunner;
+    [SerializeField] public List<Transform> spawnPoints;
 
     private void Awake()
     {

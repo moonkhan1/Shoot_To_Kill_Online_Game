@@ -9,6 +9,7 @@ public class LocalCameraHandler : MonoBehaviour
     public Camera localCamera;
     [SerializeField] private Transform _cameraFollowPoint;
     [SerializeField] private GameObject _localGun;
+    [SerializeField] private Transform _localCanvas;
 
     private Vector2 _rotationInput;
 
@@ -35,35 +36,29 @@ public class LocalCameraHandler : MonoBehaviour
 
         if(_cinemachineVirtualCamera == null)
         {
-            Debug.Log("_cinemachineVirtualCamera == null");
             _cinemachineVirtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
         }
         else
         {
             if(NetworkPlayer.Local.IsThirdPersonCamera)
             {
-                Debug.Log("IsThirdPersonCamera");
-
                 if (_cinemachineVirtualCamera.enabled) return;
-
-                Debug.Log("!_cinemachineVirtualCamera.enabled");
 
                 _cinemachineVirtualCamera.Follow = NetworkPlayer.Local.model;
                 _cinemachineVirtualCamera.LookAt= NetworkPlayer.Local.model;
                 _cinemachineVirtualCamera.enabled = true;
                 Utils.SetRenderLayerInChildren(NetworkPlayer.Local.model, LayerMask.NameToLayer("Default"));
+                Utils.SetRenderLayerInChildren(_localCanvas, LayerMask.NameToLayer("Default"));
                 _localGun.SetActive(false);
             }
             else
             {
-                Debug.Log("!NetworkPlayer.Local.IsThirdPersonCamera");
-
                 if (_cinemachineVirtualCamera.enabled)
                 {
-                    Debug.Log("_cinemachineVirtualCamera.enabled)");
 
                     _cinemachineVirtualCamera.enabled = false;
                     Utils.SetRenderLayerInChildren(NetworkPlayer.Local.model, LayerMask.NameToLayer("LocalPlayerModel"));
+                    Utils.SetRenderLayerInChildren(_localCanvas, LayerMask.NameToLayer("Default"));
 
                     _localGun.SetActive(true);
                 }
